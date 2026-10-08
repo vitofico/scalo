@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import math
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -96,8 +97,12 @@ class FlightSearcher:
         logger.info("  Fetching flights for %s->%s...", origin, connection)
         first_leg_flights = self.client.get_flights(origin, connection, start_date, end_date)
 
-        # An overnight connection from a first leg on end_date departs the day after.
-        second_leg_end = end_date + timedelta(days=1) if self.builder.allow_overnight else end_date
+        # An overnight connection from a first leg on end_date can depart up to
+        # max_connection_hours later, so possibly several days after end_date.
+        extra_days = (
+            math.ceil(self.builder.max_connection_hours / 24) if self.builder.allow_overnight else 0
+        )
+        second_leg_end = end_date + timedelta(days=extra_days)
         logger.info("  Fetching flights for %s->%s...", connection, destination)
         second_leg_flights = self.client.get_flights(
             connection, destination, start_date, second_leg_end

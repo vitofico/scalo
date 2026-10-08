@@ -153,6 +153,24 @@ class TestFlightSearcher:
             (EVENING_FIRST_LEG, MORNING_SECOND_LEG)
         ]
 
+    def test_overnight_layover_longer_than_a_day_from_last_day(self):
+        second_leg = _flight(
+            "BGY", "CRV", datetime(2026, 12, 22, 2, 0), datetime(2026, 12, 22, 3, 30)
+        )
+        client = FakeClient(EVENING_FIRST_LEG, second_leg)
+        builder = ItineraryBuilder(max_connection_hours=30, allow_overnight=True)
+        searcher = FlightSearcher(client=client, builder=builder)
+
+        results = searcher.search(
+            origin="SVQ",
+            connections=["BGY"],
+            destination="CRV",
+            start_date=date(2026, 12, 10),
+            end_date=date(2026, 12, 20),
+        )
+
+        assert [(r.first_leg, r.second_leg) for r in results] == [(EVENING_FIRST_LEG, second_leg)]
+
     def test_same_day_search_fetches_only_the_requested_dates(self):
         client = FakeClient()
         searcher = FlightSearcher(client=client, builder=ItineraryBuilder())
