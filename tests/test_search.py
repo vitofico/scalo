@@ -1,10 +1,51 @@
 """Tests for flight search orchestrator."""
 
-from datetime import date
+from datetime import date, datetime
+from decimal import Decimal
 from unittest.mock import MagicMock
 
 from scalo.itinerary import ItineraryBuilder
+from scalo.models import Flight
 from scalo.search import FlightSearcher, SearchProgress, _date_range
+
+
+class FakeClient:
+    """Answers each route with the given flights that depart inside the requested dates."""
+
+    def __init__(self, *flights: Flight) -> None:
+        self.flights = flights
+        self.requests: list[tuple[str, str, date, date]] = []
+
+    def get_flights(
+        self, origin: str, destination: str, date_from: date, date_to: date
+    ) -> list[Flight]:
+        self.requests.append((origin, destination, date_from, date_to))
+        return [
+            f
+            for f in self.flights
+            if (f.origin, f.destination) == (origin, destination)
+            and date_from <= f.departure_datetime.date() <= date_to
+        ]
+
+
+def _flight(origin: str, destination: str, departure: datetime, arrival: datetime) -> Flight:
+    return Flight(
+        origin=origin,
+        destination=destination,
+        flight_number="FR1",
+        departure_datetime=departure,
+        arrival_datetime=arrival,
+        price=Decimal("10"),
+        currency="EUR",
+    )
+
+
+EVENING_FIRST_LEG = _flight(
+    "SVQ", "BGY", datetime(2026, 12, 20, 19, 0), datetime(2026, 12, 20, 21, 30)
+)
+MORNING_SECOND_LEG = _flight(
+    "BGY", "CRV", datetime(2026, 12, 21, 7, 0), datetime(2026, 12, 21, 8, 30)
+)
 
 
 class TestDateRange:
@@ -95,3 +136,36 @@ class TestFlightSearcher:
         assert progress_events[1].connection == "CRL"
         assert progress_events[1].current == 2
         assert progress_events[1].total == 2
+
+    def test_overnight_connection_from_last_day(self):
+        client = FakeClient(EVENING_FIRST_LEG, MORNING_SECOND_LEG)
+        searcher = FlightSearcher(client=client, builder=ItineraryBuilder(allow_overnight=True))
+
+        results = searcher.search(
+            origin="SVQ",
+            connections=["BGY"],
+            destination="CRV",
+            start_date=date(2026, 12, 10),
+            end_date=date(2026, 12, 20),
+        )
+
+        assert [(r.first_leg, r.second_leg) for r in results] == [
+            (EVENING_FIRST_LEG, MORNING_SECOND_LEG)
+        ]
+
+    def test_same_day_search_fetches_only_the_requested_dates(self):
+        client = FakeClient()
+        searcher = FlightSearcher(client=client, builder=ItineraryBuilder())
+
+        searcher.search(
+            origin="SVQ",
+            connections=["BGY"],
+            destination="CRV",
+            start_date=date(2026, 12, 10),
+            end_date=date(2026, 12, 20),
+        )
+
+        assert client.requests == [
+            ("SVQ", "BGY", date(2026, 12, 10), date(2026, 12, 20)),
+            ("BGY", "CRV", date(2026, 12, 10), date(2026, 12, 20)),
+        ]

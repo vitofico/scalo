@@ -96,8 +96,12 @@ class FlightSearcher:
         logger.info("  Fetching flights for %s->%s...", origin, connection)
         first_leg_flights = self.client.get_flights(origin, connection, start_date, end_date)
 
+        # An overnight connection from a first leg on end_date departs the day after.
+        second_leg_end = end_date + timedelta(days=1) if self.builder.allow_overnight else end_date
         logger.info("  Fetching flights for %s->%s...", connection, destination)
-        second_leg_flights = self.client.get_flights(connection, destination, start_date, end_date)
+        second_leg_flights = self.client.get_flights(
+            connection, destination, start_date, second_leg_end
+        )
 
         logger.info(
             "  Fetched %d flights for first leg, %d for second leg",
