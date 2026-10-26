@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none" preserveAspectRatio="xMaxYMin slice">
+  <g stroke="black" stroke-width=".9">
+    <path opacity=".65" d="M190-50C130 140 440 130 610 80S920 70 1050 350M320-50C290 90 490 230 720 180S980 250 1050 520M480-50C400 120 550 350 790 310S960 420 1050 710M650-50C500 170 730 300 820 520S900 790 1060 850M820-50C650 210 860 400 900 650S890 950 1040 1050"/>
+    <path opacity=".35" stroke-dasharray="3 6" d="M80-50C40 210 430 170 590 230S850 450 970 570S900 880 1050 960M360-50C270 200 580 260 730 430S780 750 980 1000"/>
+    <path opacity=".3" d="M20 500C100 600 280 570 360 700S450 920 660 1030M-30 690C140 710 190 830 250 950M-50 840C100 830 100 950 150 1030"/>
+  </g>
+  <g fill="black" opacity=".75"><circle cx="610" cy="80" r="3"/><circle cx="720" cy="180" r="3"/><circle cx="820" cy="520" r="3"/><circle cx="900" cy="650" r="3"/><circle cx="360" cy="700" r="2.5"/></g>
+</svg>

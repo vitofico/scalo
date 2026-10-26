@@ -1,0 +1,87 @@
+/* Routes frame the canvas; opaque task surfaces keep fares and forms clear. */
+.page { position: relative; isolation: isolate; }
+:root:not([data-background-style="plain"]) .page::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: var(--c-accent-text);
+  opacity: .15;
+  -webkit-mask: url(/route-contours.svg) right top / max(70vw, 44rem) 100vh no-repeat;
+  mask: url(/route-contours.svg) right top / max(70vw, 44rem) 100vh no-repeat;
+}
+:root:not([data-background-style="plain"]) .page-header { background: transparent; }
+.page-header-inner { position: relative; }
+.page-header h1, .page-header p { padding-right: 7rem; }
+.appearance { position: absolute; top: 0; right: var(--space-4); z-index: 210; }
+.appearance summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-3);
+  background: var(--c-surface);
+}
+.appearance summary::-webkit-details-marker { display: none; }
+.appearance summary:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 3px; }
+.appearance-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  width: min(20rem, calc(100vw - 2rem));
+  padding: var(--space-4);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+.appearance-panel h2 { font-size: var(--text-md); margin-bottom: var(--space-3); }
+.appearance-panel p { padding: 0; font-size: var(--text-xs); margin-top: var(--space-3); }
+.appearance-choices { display: flex; gap: var(--space-3); }
+.appearance-choices button {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: var(--space-2);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  font-size: var(--text-sm);
+}
+.appearance-choices button[aria-pressed="true"] { border-color: var(--c-accent-text); outline: 1px solid var(--c-accent-text); }
+.background-preview {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 4rem;
+  margin-bottom: var(--space-2);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+.background-preview[data-style="artwork"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-accent-text);
+  opacity: .5;
+  -webkit-mask: url(/route-contours.svg) right top / cover no-repeat;
+  mask: url(/route-contours.svg) right top / cover no-repeat;
+}
+.background-preview::after {
+  content: "";
+  position: absolute;
+  inset: 35% 20% 25%;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+.route-motif { width: 7.5rem; height: 2.125rem; color: var(--c-accent-text); opacity: .65; margin-bottom: var(--space-2); }
+.route-motif-travel { animation: route-travel 2s linear infinite; }
+:root[data-background-style="plain"] .route-motif { display: none; }
+@keyframes route-travel { to { stroke-dashoffset: -30; } }
+@media (prefers-reduced-motion: reduce) { .route-motif-travel { animation: none; } }
+@media (min-width: 48em) { .appearance { right: var(--space-5); } }
