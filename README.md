@@ -141,6 +141,8 @@ Each result is a card that shows both legs of the journey with the layover marke
 
 The interface follows your system theme, light or dark, with no toggle to remember. It is built for a phone as much as a laptop, so the form, the progress panel and the result cards all reflow down to narrow screens. Keyboard users get visible focus rings throughout, and motion is disabled if you have asked your system to reduce it.
 
+Appearance offers Plain and Artwork previews. Artwork adds blue route contours; Plain keeps solid surfaces. The choice stays in this browser and is independent of the system light or dark theme.
+
 For development, run the two processes separately:
 
 ```bash

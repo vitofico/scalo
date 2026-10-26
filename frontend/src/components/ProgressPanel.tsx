@@ -1,4 +1,5 @@
 import type { ProgressInfo } from "../api/client";
+import RouteMotif from "./RouteMotif";
 
 interface ProgressPanelProps {
   progress: ProgressInfo | null;
@@ -13,6 +14,7 @@ export default function ProgressPanel({
 
   return (
     <section className="progress-panel" aria-busy="true">
+      <RouteMotif />
       <div className="progress-head">
         <h2 className="progress-title">
           <span className="progress-dot" aria-hidden="true" />

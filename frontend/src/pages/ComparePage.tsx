@@ -116,6 +116,7 @@ export default function ComparePage() {
       <header className="page-header">
         <div className="page-header-inner">
           <h1>Compare Flights</h1>
+          <Appearance />
           <p>
             {items.length === 0
               ? "No flights selected"
@@ -204,3 +205,4 @@ export default function ComparePage() {
     </div>
   );
 }
+import Appearance from "../components/Appearance";

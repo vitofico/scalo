@@ -126,10 +126,11 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <div className="page">
+    <div className={state === "results" ? "page page--wide" : "page"}>
       <header className="page-header">
         <div className="page-header-inner">
           <h1>Scalo</h1>
+          <Appearance />
           <p>Find connecting Ryanair flights at the best prices</p>
         </div>
       </header>
@@ -179,3 +180,4 @@ export default function SearchPage() {
     </div>
   );
 }
+import Appearance from "../components/Appearance";
