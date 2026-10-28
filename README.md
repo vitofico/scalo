@@ -12,8 +12,10 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/web-ui.gif" width="800" alt="The web UI searching Dublin to Seville: the form is filled in, a progress bar runs through eight connection airports, and ranked two-flight itineraries appear, cheapest first at EUR 76.98 via Palma.">
+  <a href="docs/assets/readme-results-light.png"><img src="docs/assets/readme-results-light.png" width="100%" alt="Scalo in light mode: three sample Dublin to Seville connections ranked by total fare, with both flights, layovers and Compare controls."></a>
 </p>
+
+<p align="center"><em>A completed search, ready to shortlist. Screenshots use illustrative fares, not live offers.</em></p>
 
 ## What it is
 
@@ -133,13 +135,25 @@ Total: 2 itineraries
 
 The browser app is the friendly face of the same search the CLI runs. You pick an origin, a destination, a date range and the airports you are willing to connect through, and progress streams in while the search runs: a progress bar fills as each connection airport is priced, so you see how far along it is rather than staring at a spinner. The ranked results appear when the search finishes.
 
-Each result is a card that shows both legs of the journey with the layover marked on the route line between them, so you can scan flight times, the stopover airport and how long you are stuck there at a glance. The total price and total duration sit together at the end of the card. Anything promising can be added to the compare view, which stacks the shortlist side by side, highlights the cheapest and the fastest, and exports the lot as JSON or CSV.
+Each result is a card that shows both legs of the journey with the layover marked on the route line between them, so you can scan flight times, the stopover airport and how long you are stuck there at a glance. The total price and total duration sit together at the end of the card. Anything promising can be added to the compare view, which shows the selected journeys together, highlights the cheapest and the fastest, and exports them as JSON or CSV.
 
 <p align="center">
-  <img src="docs/assets/results.png" width="700" alt="Results for Dublin to Seville: 30 itineraries sorted by price, each card showing both flights, the stopover airport with the layover length, the total price and the total duration.">
+  <a href="docs/assets/readme-search-light.png"><img src="docs/assets/readme-search-light.png" width="100%" alt="Scalo search populated with Dublin, Seville, a date range and three discovered connection airports, using the Artwork background."></a>
 </p>
 
-The interface follows your system theme, light or dark, with no toggle to remember. It is built for a phone as much as a laptop, so the form, the progress panel and the result cards all reflow down to narrow screens. Keyboard users get visible focus rings throughout, and motion is disabled if you have asked your system to reduce it.
+Use **Discover** to fill the connection airports, then search your date range.
+Sort results by **Price**, **Duration** or **Layover**. Add promising routes with
+**Compare** and open **Compare (n)** to compare the shortlist and export it
+as JSON or CSV. The shortlist lasts for the current page session; export it
+before refreshing or closing the tab.
+
+<p align="center">
+  <a href="docs/assets/readme-compare-dark.png"><img src="docs/assets/readme-compare-dark.png" width="100%" alt="Scalo in dark mode with the Plain background: two shortlisted sample journeys, cheapest and fastest summaries, sorting and JSON/CSV export."></a>
+</p>
+
+The interface follows your system's light or dark colours. Open **Appearance**
+in the header to choose **Artwork** for the route-map background or **Plain**
+for solid surfaces; that choice is saved in this browser. It is built for a phone as much as a laptop, so the form, the progress panel and the result cards all reflow down to narrow screens. Keyboard users get visible focus rings throughout, and motion is disabled if you have asked your system to reduce it.
 
 Appearance offers Plain and Artwork previews. Artwork adds blue route contours; Plain keeps solid surfaces. The choice stays in this browser and is independent of the system light or dark theme.
 
