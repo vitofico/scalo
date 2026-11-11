@@ -1,8 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BACKGROUND_STORAGE_KEY, applyBackgroundStyle, readBackgroundStyle, setBackgroundStyle, type BackgroundStyle } from "../background-style";
 
-export default function Appearance() {
+export default function Appearance({ reveal = false }: { reveal?: boolean }) {
   const [background, setBackground] = useState<BackgroundStyle>(readBackgroundStyle);
+  const panel = useRef<HTMLDetailsElement>(null);
+  const summary = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (reveal && panel.current) {
+      panel.current.open = true;
+      summary.current?.focus();
+    }
+  }, [reveal]);
+
   useEffect(() => {
     const follow = (event: StorageEvent) => {
       if (event.key !== BACKGROUND_STORAGE_KEY && event.key !== null) return;
@@ -14,8 +24,8 @@ export default function Appearance() {
     return () => window.removeEventListener("storage", follow);
   }, []);
   return (
-    <details className="appearance">
-      <summary>Appearance</summary>
+    <details className="appearance" ref={panel}>
+      <summary ref={summary}>Appearance</summary>
       <div className="appearance-panel">
         <h2>Background style</h2>
         <div className="appearance-choices" role="group" aria-label="Background style">
