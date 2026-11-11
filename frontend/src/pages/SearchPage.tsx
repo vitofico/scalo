@@ -13,6 +13,8 @@ import ProgressPanel from "../components/ProgressPanel";
 import ItineraryList from "../components/ItineraryList";
 import RecentSearches from "../components/RecentSearches";
 import { useCompare } from "../context/CompareContext";
+import Appearance from "../components/Appearance";
+import { WHATS_NEW_ROUTE } from "./WhatsNewPage";
 
 const RECENT_KEY = "ryanair-recent-searches";
 const MAX_RECENT = 3;
@@ -40,7 +42,22 @@ function saveRecent(params: SearchParams): void {
 
 type PageState = "idle" | "searching" | "results" | "error";
 
-export default function SearchPage() {
+type SearchPageProps = {
+  hidden: boolean;
+  unreadUpdates: boolean;
+  revealAppearance: boolean;
+};
+
+export default function SearchPage({ hidden, unreadUpdates, revealAppearance }: SearchPageProps) {
+  const whatsNewLink = useRef<HTMLAnchorElement>(null);
+  const wasHidden = useRef(hidden);
+  useEffect(() => {
+    if (wasHidden.current && !hidden && !revealAppearance) {
+      whatsNewLink.current?.focus();
+    }
+    wasHidden.current = hidden;
+  }, [hidden, revealAppearance]);
+
   const { items: compareItems } = useCompare();
   const [state, setState] = useState<PageState>("idle");
   const [progress, setProgress] = useState<ProgressInfo | null>(null);
@@ -126,11 +143,11 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <div className={state === "results" ? "page page--wide" : "page"}>
+    <div className={state === "results" ? "page page--wide" : "page"} hidden={hidden}>
       <header className="page-header">
         <div className="page-header-inner">
           <h1>Scalo</h1>
-          <Appearance />
+          <Appearance reveal={revealAppearance} />
           <p>Find connecting Ryanair flights at the best prices</p>
         </div>
       </header>
@@ -172,6 +189,14 @@ export default function SearchPage() {
         )}
       </main>
 
+      <footer className="page-footer">
+        <a className="whats-new-link" href={WHATS_NEW_ROUTE} ref={whatsNewLink}
+          aria-label={unreadUpdates ? "What’s new, unread updates" : undefined}>
+          What’s new
+          {unreadUpdates && <span className="whats-new-dot" aria-hidden="true" />}
+        </a>
+      </footer>
+
       {compareItems.length > 0 && (
         <a href="#/compare" className="compare-fab">
           Compare ({compareItems.length})
@@ -180,4 +205,3 @@ export default function SearchPage() {
     </div>
   );
 }
-import Appearance from "../components/Appearance";
